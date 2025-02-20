@@ -18,7 +18,7 @@ export default function ProductView({
           {product.description}
         </p>
         <div className="flex items-center gap-4">
-          <span className="text-4xl font-bold">{product.price}</span>
+          <span className="text-4xl font-bold">${product.price}</span>
           <div className="flex items-center gap-0.5">
             <Stars rating={rating} />
           </div>
