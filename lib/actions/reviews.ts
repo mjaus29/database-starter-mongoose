@@ -1,3 +1,5 @@
+"use server";
+
 import dbConnect from "../db";
 import Review from "../models/review";
 

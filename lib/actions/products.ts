@@ -63,47 +63,58 @@ export async function deleteProduct(productId: string): Promise<boolean> {
   }
 }
 
-export async function getProducts(
-  page: number,
-  name: string,
-  minPrice: number,
-  category: string
-) {
+export async function getProducts({
+  page = 1,
+  name,
+  minPrice,
+  category,
+}: {
+  page?: number;
+  name?: string;
+  minPrice?: number;
+  category?: string;
+}) {
   await dbConnect();
 
   const limit = 5;
   const skip = (page - 1) * limit;
+
+  const filters: any = {};
+
+  if (name) {
+    filters.name = { $regex: name, $options: "i" };
+  }
+
+  if (category && category !== "all") {
+    filters.category = category;
+  }
+
+  if (minPrice) {
+    filters.price = { $gte: minPrice };
+  }
+
   try {
     const products = await Product.aggregate([
       {
         $lookup: {
           from: "reviews",
           localField: "_id",
-          foreignField: "product",
+          foreignField: "productId",
           as: "reviews",
         },
       },
       {
         $project: {
           name: 1,
+          price: 1,
+          category: 1,
           image: { $first: "$images" },
           averageRating: {
             $avg: "$reviews.rating",
           },
         },
       },
-      {
-        $match: {
-          name: {
-            $regex: name,
-            $options: "i",
-          },
-          price: {
-            $gte: minPrice,
-          },
-          ...(category && { category: category }),
-        },
-      },
+      { $match: filters },
       {
         $skip: skip,
       },

@@ -7,18 +7,18 @@ export default async function Component({
   searchParams,
 }: {
   searchParams: {
-    page: string;
     name: string;
-    minPrice: string;
     category: string;
+    minPrice: string;
+    page: string;
   };
 }) {
   const page = parseInt(searchParams.page) || 1;
-  const name = searchParams.name || "";
   const minPrice = parseInt(searchParams.minPrice) || 0;
+  const name = searchParams.name || "";
   const category = searchParams.category || "";
 
-  const products = await getProducts(page, name, minPrice, category);
+  const products = await getProducts({ page, name, minPrice, category });
 
   return (
     <div className="grid md:grid-cols-[300px_1fr] gap-8 px-4 md:px-8 py-20">
@@ -27,10 +27,9 @@ export default async function Component({
         <Pagination />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products &&
-          products.map((product) => (
-            <ProductResult key={product.id} product={product} />
-          ))}
+        {(products ?? []).map((product) => (
+          <ProductResult key={product._id} product={product} />
+        ))}
       </div>
     </div>
   );

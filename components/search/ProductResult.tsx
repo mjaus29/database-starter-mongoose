@@ -5,7 +5,7 @@ import Stars from "@/components/product/Stars";
 export default function ProductResult({ product }: { product: any }) {
   return (
     <div className="bg-white rounded-lg shadow-sm dark:bg-gray-950 overflow-hidden">
-      <Link className="block" href={`/product/view/${product.id}`}>
+      <Link className="block" href={`/product/view/${product._id}`}>
         <img
           src={product.image}
           alt="product"
