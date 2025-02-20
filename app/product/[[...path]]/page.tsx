@@ -15,17 +15,19 @@ export default async function Page({ params }: { params: { path: string[] } }) {
   if (method === "new") {
     return <AddProduct />;
   }
-  if (method === "edit") {
-    return <AddProduct edit id={id} />;
-  }
-  if (method === "delete") {
-    return <DeleteProduct id={id} />;
-  }
+
   const product = await getProductById(id);
   const { reviews, averageRating } = await getReviewsAndRating(id);
 
   if (!product) {
     return <div>Product not found</div>;
+  }
+
+  if (method === "edit") {
+    return <AddProduct edit id={id} product={product} />;
+  }
+  if (method === "delete") {
+    return <DeleteProduct id={id} />;
   }
 
   return (

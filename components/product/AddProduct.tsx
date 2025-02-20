@@ -17,41 +17,56 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { createProduct } from "@/lib/actions/products";
+import { createProduct, updateProduct } from "@/lib/actions/products";
+import Product from "@/lib/models/product";
 
 export const revalidate = 1;
 
 export default function AddProduct({
   edit,
   id,
+  product,
 }: {
   edit?: boolean;
   id?: string;
+  product?: Product;
 }) {
   const title = edit ? "Edit Product " + id : "Add Product";
   const subText = edit
     ? "Update the details of your product here."
     : "Add a new product to your store.";
 
-  const [images, setImages] = useState<string[]>([]);
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState(0);
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("electronics");
+  const [name, setName] = useState(product?.name || "");
+  const [price, setPrice] = useState(product?.price || 0);
+  const [description, setDescription] = useState(product?.description || "");
+  const [category, setCategory] = useState(product?.category || "");
+
+  const [images, setImages] = useState<string[]>(product?.images || []);
 
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const newProductId = await createProduct({
-        name,
-        category,
-        description,
-        price,
-        images,
-      });
-      router.push(`/product/view/${newProductId}`);
+      if (edit && product && id) {
+        const productID = await updateProduct(id, {
+          name,
+          price,
+          description,
+          category,
+          images,
+        });
+        router.push(`/product/view/${productID}`);
+      } else {
+        const productID = await createProduct({
+          name,
+          price,
+          description,
+          category,
+          images,
+        });
+        router.push(`/product/view/${productID}`);
+      }
     } catch (error) {
       console.error("Error creating product:", error);
     }
