@@ -1,6 +1,3 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { Inter } from "next/font/google";
 
 import "./globals.css";
@@ -13,18 +10,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
-
   return (
     <html lang="en">
       <head>
         <title>Acme Store Admin Panel</title>
       </head>
-      <body className={hydrated ? inter.className : ""}>
+      <body className={inter.className} suppressHydrationWarning>
         <Header />
         <main>{children}</main>
       </body>
