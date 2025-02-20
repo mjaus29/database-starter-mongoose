@@ -42,3 +42,14 @@ export async function updateProduct(productId: string, data: Partial<Product>) {
     return null;
   }
 }
+
+export async function deleteProduct(productId: string): Promise<boolean> {
+  await dbConnect();
+  try {
+    const result = await Product.deleteOne({ _id: productId });
+    return result.deletedCount === 1;
+  } catch (error) {
+    console.error("Error deleting product", error);
+    return false;
+  }
+}
