@@ -19,7 +19,7 @@ export async function createProduct(product: Product) {
 async function _getProductById(_id: string) {
   await dbConnect();
   try {
-    const product = await Product.findById(_id).lean();
+    const product = await Product.findById(_id).lean<Product>();
     if (!product) {
       return null;
     }
