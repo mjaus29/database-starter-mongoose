@@ -19,6 +19,7 @@ export default function ProductResult({ product }: { product: any }) {
               {product.averageRating?.toFixed(1) || 0}
             </span>
           </div>
+          <h3 className="text-xl font-bold">${product.price}</h3>
         </div>
       </Link>
     </div>

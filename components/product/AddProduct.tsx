@@ -39,7 +39,7 @@ export default function AddProduct({
   const [name, setName] = useState(product?.name || "");
   const [price, setPrice] = useState(product?.price || 0);
   const [description, setDescription] = useState(product?.description || "");
-  const [category, setCategory] = useState(product?.category || "");
+  const [category, setCategory] = useState(product?.category || "all");
 
   const [images, setImages] = useState<string[]>(product?.images || []);
 
@@ -128,7 +128,7 @@ export default function AddProduct({
               rows={5}
             />
           </div>
-          <ImageSelect onChange={(value) => setImages(value)} />
+          <ImageSelect value={images} onChange={(value) => setImages(value)} />
         </div>
         <div className="flex justify-end gap-2">
           <Button variant="outline">Cancel</Button>

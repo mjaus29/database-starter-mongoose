@@ -1,3 +1,4 @@
+"use client";
 import { Router, TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
