@@ -62,3 +62,57 @@ export async function deleteProduct(productId: string): Promise<boolean> {
     return false;
   }
 }
+
+export async function getProducts(
+  page: number,
+  name: string,
+  minPrice: number,
+  category: string
+) {
+  await dbConnect();
+
+  const limit = 5;
+  const skip = (page - 1) * limit;
+  try {
+    const products = await Product.aggregate([
+      {
+        $lookup: {
+          from: "reviews",
+          localField: "_id",
+          foreignField: "product",
+          as: "reviews",
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          image: { $first: "$images" },
+          averageRating: {
+            $avg: "$reviews.rating",
+          },
+        },
+      },
+      {
+        $match: {
+          name: {
+            $regex: name,
+            $options: "i",
+          },
+          price: {
+            $gte: minPrice,
+          },
+          ...(category && { category: category }),
+        },
+      },
+      {
+        $skip: skip,
+      },
+      {
+        $limit: limit,
+      },
+    ]);
+    return products;
+  } catch (error) {
+    console.log(error);
+  }
+}
