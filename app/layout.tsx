@@ -14,6 +14,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <title>Acme Store Admin Panel</title>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body className={inter.className} suppressHydrationWarning>
         <Header />
