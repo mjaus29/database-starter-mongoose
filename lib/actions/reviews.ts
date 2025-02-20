@@ -9,12 +9,13 @@ import { unstable_cache as cache, revalidateTag } from "next/cache";
 async function _getReviewsAndRating(productId: string) {
   await dbConnect();
   const reviews = await Review.find({ productId });
-  const averageRatingResult = await Review.aggregate([
-    { $match: { productId: new mongoose.Types.ObjectId(productId) } },
-    { $group: { _id: null, average: { $avg: "$rating" } } },
-  ]);
 
-  const averageRating = averageRatingResult[0]?.average || 0;
+  let totalRating = 0;
+  reviews.forEach((review) => {
+    totalRating += review.rating;
+  });
+
+  const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
 
   return { reviews, averageRating };
 }

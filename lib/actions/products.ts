@@ -19,7 +19,7 @@ export async function createProduct(product: Product) {
 async function _getProductById(_id: string) {
   await dbConnect();
   try {
-    const product = await Product.findById(_id);
+    const product = await Product.findById(_id).lean();
     if (!product) {
       return null;
     }
@@ -95,6 +95,7 @@ export async function getProducts({
 
   try {
     const products = await Product.aggregate([
+      { $match: filters },
       {
         $lookup: {
           from: "reviews",
@@ -105,6 +106,7 @@ export async function getProducts({
       },
       {
         $project: {
+          _id: 1,
           name: 1,
           price: 1,
           category: 1,
@@ -114,7 +116,6 @@ export async function getProducts({
           },
         },
       },
-      { $match: filters },
       {
         $skip: skip,
       },
